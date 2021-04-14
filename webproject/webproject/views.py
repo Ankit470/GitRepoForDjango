@@ -10,6 +10,8 @@ def analyze(request):
     removepunc = request.GET.get('removepunc','off')
     fullcaps = request.GET.get('fullcaps','off')
     newlineremover = request.GET.get('newlineremover','off')
+    spaceremover = request.GET.get('spaceremover','off')
+
     print(removepunc)
     print(djtext) 
     if removepunc == "on":
@@ -34,6 +36,14 @@ def analyze(request):
                analyzed = analyzed + char 
         params = {'purpose':'Removed New Line','analyzed_text':analyzed}
         return render(request,'analyze.html',params) 
+    elif(spaceremover == "on"):
+        analyzed =""
+        for index, char in enumerate(djtext):
+            if not(djtext[index]==" " and djtext[index + 1] ==" "):
+                analyzed = analyzed + char
+        params = {'purpose':'Removed New Line','analyzed_text':analyzed}
+        return render(request,'analyze.html',params) 
+    
     else:
      return HttpResponse("Error")
 
