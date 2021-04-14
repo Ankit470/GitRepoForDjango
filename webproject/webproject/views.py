@@ -11,6 +11,7 @@ def analyze(request):
     fullcaps = request.GET.get('fullcaps','off')
     newlineremover = request.GET.get('newlineremover','off')
     spaceremover = request.GET.get('spaceremover','off')
+    charactercounter = request.GET.get('charactercounter','off')
 
     print(removepunc)
     print(djtext) 
@@ -43,7 +44,12 @@ def analyze(request):
                 analyzed = analyzed + char
         params = {'purpose':'Removed New Line','analyzed_text':analyzed}
         return render(request,'analyze.html',params) 
-    
+    elif(charactercounter =="on"):
+        analyzed = len(djtext)
+        params = {'purpose':'Character Counter','analyzed_text':analyzed}
+        return render(request,'analyze.html',params) 
+
+
     else:
      return HttpResponse("Error")
 
