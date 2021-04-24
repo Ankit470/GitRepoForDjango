@@ -11,7 +11,7 @@ def analyze(request):
     fullcaps = request.POST.get('fullcaps','off')
     newlineremover = request.POST.get('newlineremover','off')
     spaceremover = request.POST.get('spaceremover','off')
-    charactercounter = request.POST.get('charactercounter','off')
+    
 
     print(removepunc)
     print(djtext) 
@@ -23,36 +23,43 @@ def analyze(request):
                analyzed = analyzed + char
 
         params = {'purpose':'Removed Puntuations','analyzed_text':analyzed}
-        return render(request,'analyze.html',params)
-    elif(fullcaps=="on"):
+        djtext = analyzed
+        # return render(request,'analyze.html',params)
+    if(fullcaps=="on"):
         analyzed=""
         for char in djtext:
             analyzed = analyzed + char.upper()
         params = {'purpose':'Changed To UpperCase','analyzed_text':analyzed}
-        return render(request,'analyze.html',params) 
-    elif(newlineremover=="on"):
+        djtext = analyzed
+        # return render(request,'analyze.html',params) 
+    if(newlineremover=="on"):
         analyzed=""
         for char in djtext:
             if char !="\n" and char !="\r":
                analyzed = analyzed + char 
         params = {'purpose':'Removed New Line','analyzed_text':analyzed}
-        return render(request,'analyze.html',params) 
-    elif(spaceremover == "on"):
+        djtext = analyzed
+        # return render(request,'analyze.html',params) 
+    if(spaceremover == "on"):
         analyzed =""
         for index, char in enumerate(djtext):
             if not(djtext[index]==" " and djtext[index + 1] ==" "):
                 analyzed = analyzed + char
         params = {'purpose':'Removed New Line','analyzed_text':analyzed}
-        return render(request,'analyze.html',params) 
-    elif(charactercounter =="on"):
-        analyzed = len(djtext)
-        params = {'purpose':'Character Counter','analyzed_text':analyzed}
-        return render(request,'analyze.html',params) 
+        
+        # return render(request,'analyze.html',params) 
+    
+    
+    if(removepunc !="on" and fullcaps !="on" and newlineremover !="on" and spaceremover != "on" ):
+        return HttpResponse("Error")
 
 
-    else:
-     return HttpResponse("Error")
+    # else:
+    #  return HttpResponse("Error")
 
+    return render(request,'analyze.html',params)
+
+    
 # def removepunc(request):
 #     return HttpResponse("remove punc")
 
