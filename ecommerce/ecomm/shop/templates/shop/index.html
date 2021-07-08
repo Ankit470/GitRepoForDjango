@@ -58,29 +58,23 @@
     <div class="container carousel-inner no-padding">
 
         <div class="carousel-item active">
-          <div class="col-xs-3 col-sm-3 col-md-3">
-            <div class="card" style="width: 18rem;">
-              <img src='/media/{{product.0.image}}' class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title">{{product.0.product_name}}</h5>
-                  <p class="card-text">{{product.0.desc}}</p>
-                  <a href="#" class="btn btn-primary">Add to Cart</a>
-              </div>
-            </div>
-        </div>
-        {% for i in product|slice:"1:" %}
+          
+        {% for i in product %}
 
           <div class="col-xs-3 col-sm-3 col-md-3">
-            <div class="card" style="width: 18rem;">
+            <div class="card align-items-center" style="width: 18rem;">
               <img src='/media/{{i.image}}' class="card-img-top" alt="...">
               <div class="card-body">
-                <h5 class="card-title">{{i.product_name}}</h5>
+                <h5 class="card-title">{{forloop.counter}} {{i.product_name}}</h5>
                 <p class="card-text">{{i.desc}}</p>
-                <a href="#" class="btn btn-primary">Add to cart</a>
+                <span id="divpr{{i.id}}" class = "divpr">
+                <button id='pr{{i.id}}' class="btn btn-primary cart">Add to cart</button>
+                </span>
+                <a href="/shop/products/{{i.id}}"><button id='qv{{i.id}}' class="btn btn-primary cart">quickview</button></a>
               </div>
             </div>
           </div>
-          {% if forloop.counter|divisibleby:3 and forloop.counter > 0 and not forloop.last %}
+          {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
       </div><div class="carousel-item">
           {% endif %}
 
@@ -99,6 +93,69 @@
     {% endfor %}
 
   </div>
+ {% endblock %}
+
+ {% block js %}
+ <script>
+
+   //find out the cart items from the local storage 
+  console.log('working')
+  if(localStorage.getItem('cart')==null){
+    var cart ={};
+  }else {
+    cart = JSON.parse(localStorage.getItem('cart'))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    updateCart(cart);
+  }
+
+  // if the addtocart button is clicked, add /increment the item 
+  $('.cart').click(function(){
+    var idstr = this.id.toString();
+    console.log(idstr);
+    if(cart[idstr] != undefined){
+      cart[idstr] = cart[idstr] +1 ;
+    }else{
+      cart[idstr] = 1 ;
+    }
+    updateCart(cart);
+    
+  });
+  // add pop over to cart
+
+  $('#popcart').popover();
+   document.getElementById("popcart").setAttribute('data-content', '<h5>Cart for your items in my shopping cart</h5>');
+ // function update cart
+  function updateCart(cart){
+    for (var item in cart){
+      document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "''>" + cart[item] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'> + </button>";
+    }
+    localStorage.setItem('cart',JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    console.log(cart);
+  }
+
+  //if plus and minus button is clicked  ,then change the cart as well as display value .
+  $('.divpr').on("click","button.minus",function(){
+    console.log("minus clicked");
+    a = this.id.slice(7,);
+    cart['pr'+a] = cart['pr'+a]-1 ;
+    cart['pr' + a] = Math.max(0, cart['pr' + a]);
+    document.getElementById('valpr'+a).innerHTML = cart['pr'+a];
+    updateCart(cart);
+    console.log(a);
+
+  });
+  $('.divpr').on("click","button.plus",function(){
+    console.log("plus clicked");
+    a = this.id.slice(6,);
+    cart['pr'+a] = cart['pr'+a]+1 ;
+    document.getElementById('valpr'+a).innerHTML = cart['pr'+a];
+    updateCart(cart);
+    console.log(a);
+
+  });
+
+ </script>
  {% endblock %}
  
  
