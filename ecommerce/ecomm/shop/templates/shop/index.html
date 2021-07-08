@@ -65,8 +65,8 @@
             <div class="card align-items-center" style="width: 18rem;">
               <img src='/media/{{i.image}}' class="card-img-top" alt="...">
               <div class="card-body">
-                <h5 class="card-title">{{forloop.counter}} {{i.product_name}}</h5>
-                <p class="card-text">{{i.desc}}</p>
+                <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h5>
+                <p class="card-text">{{i.desc|slice:"0:53"}}...</p>
                 <span id="divpr{{i.id}}" class = "divpr">
                 <button id='pr{{i.id}}' class="btn btn-primary cart">Add to cart</button>
                 </span>
@@ -124,6 +124,18 @@
 
   $('#popcart').popover();
    document.getElementById("popcart").setAttribute('data-content', '<h5>Cart for your items in my shopping cart</h5>');
+   //function updatepopover
+  function updatePopover(){
+    console.log('we are inside function popover');
+    var popStr ="";
+    popStr = popStr + "<h5> Cart for your items in my shopping cart </h5>" ;
+    var i = 1 ;
+    for(var item in cart){
+      popStr = popStr + "<b>" + i + "</b>";
+      popStr = popStr + document.getElementById()+"Qty"+cart[item]+'<br>';
+      i = i+1 ;
+    }
+  }
  // function update cart
   function updateCart(cart){
     for (var item in cart){
